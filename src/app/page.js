@@ -1,103 +1,187 @@
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+export default function AuthPage() {
+    const [isLogin, setIsLogin] = useState(true);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     setError("");
+    //     setMessage("");
+    //     setLoading(true);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    //     if (!email || !password) {
+    //         setError("Please fill in all fields.");
+    //         setLoading(false);
+    //         return;
+    //     }
+
+    //     try {
+    //         if (isLogin) {
+    //             const res = await fetch("/api/auth/login", {
+    //                 method: "POST",
+    //                 headers: { "Content-Type": "application/json" },
+    //                 body: JSON.stringify({ email, password }),
+    //             });
+    //             const data = await res.json();
+    //             if (res.ok) {
+    //                 setMessage("Login successful! Redirecting...");
+    //                 setTimeout(() => router.push("/main"), 1200);
+    //             } else {
+    //                 setError(data.message || "Login failed.");
+    //             }
+    //         } else {
+    //             const res = await fetch("/api/auth/register", {
+    //                 method: "POST",
+    //                 headers: { "Content-Type": "application/json" },
+    //                 body: JSON.stringify({ email, password }),
+    //             });
+    //             const data = await res.json();
+    //             if (res.ok) {
+    //                 setMessage("Registration successful! Redirecting...");
+    //                 setTimeout(() => router.push("/main"), 1200);
+    //             } else {
+    //                 setError(data.message || "Registration failed.");
+    //             }
+    //         }
+    //     } catch (err) {
+    //         setError("Something went wrong. Please try again.");
+    //     }
+    //     setLoading(false);
+    // };
+
+    const handleGoogleLogin = async () => {
+router.push("/main");   
+        // setLoading(true);
+        // try {
+        // const res = await signIn("google", { callbackUrl: "/", redirect: false });
+        // } catch (error) {
+        // enqueueSnackbar("Google Login Failed", { variant: "error" });
+        // } finally {
+        // setLoading(false);
+        // // }
+        // const callbackUrl = encodeURIComponent('http://localhost:3001/auth/callback');
+        // window.location.href = `https://localhost:3000/api/auth/signin/google?callbackUrl=${callbackUrl}`;
+    };
+    return (
+        <div className="min-h-screen flex items-center justify-center">
+            {/* <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+                <h1 className="text-2xl font-bold mb-2 text-center text-blue-700">
+                    {isLogin ? "Welcome Back!" : "Create an Account"}
+                </h1>
+                <p className="text-gray-500 text-center mb-6">
+                    {isLogin
+                        ? "Please login to your account"
+                        : "Register to get started"}
+                </p>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1 text-gray-700">
+                            Email
+                        </label>
+                        <input
+                            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="you@example.com"
+                            type="email"
+                            value={email}
+                            autoComplete="email"
+                            onChange={(e) => setEmail(e.target.value)}
+                            disabled={loading}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1 text-gray-700">
+                            Password
+                        </label>
+                        <input
+                            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="Your password"
+                            type="password"
+                            value={password}
+                            autoComplete={isLogin ? "current-password" : "new-password"}
+                            onChange={(e) => setPassword(e.target.value)}
+                            disabled={loading}
+                        />
+                    </div>
+                    {error && (
+                        <div className="bg-red-100 text-red-700 px-3 py-2 rounded text-sm">
+                            {error}
+                        </div>
+                    )}
+                    {message && (
+                        <div className="bg-green-100 text-green-700 px-3 py-2 rounded text-sm">
+                            {message}
+                        </div>
+                    )}
+                    <button
+                        className={`bg-blue-600 hover:bg-blue-700 transition text-white px-4 py-2 w-full rounded font-semibold ${
+                            loading ? "opacity-60 cursor-not-allowed" : ""
+                        }`}
+                        disabled={loading}
+                    >
+                        {loading
+                            ? isLogin
+                                ? "Logging in..."
+                                : "Registering..."
+                            : isLogin
+                            ? "Login"
+                            : "Register"}
+                    </button>
+                </form>
+                <div className="mt-6 text-center">
+                    <span className="text-gray-600 text-sm">
+                        {isLogin
+                            ? "Don't have an account?"
+                            : "Already have an account?"}
+                    </span>
+                    <button
+                        className="ml-2 text-blue-700 hover:underline text-sm font-medium"
+                        onClick={() => {
+                            setIsLogin(!isLogin);
+                            setError("");
+                            setMessage("");
+                        }}
+                        disabled={loading}
+                        type="button"
+                    >
+                        {isLogin ? "Register" : "Login"}
+                    </button>
+                </div>
+            </div> */}
+
+        <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+            <h1 className="text-2xl font-bold mb-2 text-center text-blue-700">
+                Welcome Back!
+            </h1>
+            <p className="text-gray-500 text-center mb-6">
+                Please login to your account
+            </p>
+            <div className="flex items-center justify-center mb-4">
+                <button
+                    onClick={handleGoogleLogin}
+                    className="bg-white border border-gray-300 rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm hover:shadow-md transition duration-200"
+                >
+                    <Image
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT65WTmiisS-2uqMBJ8C-OwNvh02PWiwMLxxg&s"
+                        alt="Google Icon"
+                        width={20}
+                        height={20}
+                    />
+                    Sign in with Google
+                </button>
+            </div>
+            </div>
+
+
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
