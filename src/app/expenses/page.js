@@ -4,6 +4,7 @@ import { AiOutlineNumber, AiOutlineDelete, AiOutlineEdit, AiOutlineArrowLeft, Ai
 import { FiTag } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import { FaSync } from 'react-icons/fa';
+import SearchableDropDownCategory from '@/components/SearchableDropDownCategory';
 
 const ExpensesMaster = () => {
     const router = useRouter();
@@ -16,6 +17,18 @@ const ExpensesMaster = () => {
     const [error, setError] = useState('');
     const [expenses, setExpenses] = useState([]);
     const [editId, setEditId] = useState(null);
+
+    const [isRotating, setIsRotating] = useState(false);
+
+    const handleClick = () => {
+        setIsRotating(true);
+        router.refresh(); // refresh data
+
+        setTimeout(() => {
+            setIsRotating(false);
+        }, 3000); // stop rotation after 3 seconds
+    };
+
 
     useEffect(() => {
         // Fetch expenses
@@ -169,8 +182,10 @@ const ExpensesMaster = () => {
             <header className="bg-blue-100 p-3 sm:p-4 rounded-lg shadow-md mb-4 sm:mb-6 flex justify-between items-center">
                 <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">Expenses</h1>
                 <div
-                    onClick={() => router.refresh()}
-                    className='flex justify-center items-center w-[40px] h-[40px] rounded-full bg-blue-200 hover:bg-blue-300 transition-all duration-200 cursor-pointer'>
+                    onClick={handleClick}
+                    className={`flex justify-center items-center w-[40px] h-[40px] rounded-full bg-blue-200 hover:bg-blue-300 transition-all duration-200 cursor-pointer ${isRotating ? 'animate-spin' : ''
+                        }`}
+                >
                     <FaSync />
                 </div>
             </header>
@@ -294,7 +309,7 @@ const ExpensesMaster = () => {
                         </div>
                     </div>
                     {/* Category Dropdown */}
-                    <div className="flex items-center gap-3">
+                    {/* <div className="flex items-center gap-3">
                         <FiTag className="text-sky-500 text-lg" />
                         <div className="w-full">
                             <label className="text-xs text-black opacity-50 font-['Roboto']">Category</label>
@@ -309,7 +324,9 @@ const ExpensesMaster = () => {
                                 ))}
                             </select>
                         </div>
-                    </div>
+                    </div> */}
+
+                    <SearchableDropDownCategory categories={categories} category={categoryId} setcategory={setCategoryId} />
                     {error && (
                         <div className="bg-red-100 text-red-700 px-3 py-2 rounded text-sm">
                             {error}

@@ -4,6 +4,7 @@ import { AiOutlineUser, AiOutlineNumber, AiOutlineCar, AiOutlineDelete, AiOutlin
 import { FiTag } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import { FaSync } from 'react-icons/fa';
+import SearchableDropDownVehicle from '@/components/SearchableDropDownVehicle';
 
 const VehicleMaster = () => {
     const router = useRouter();
@@ -315,7 +316,7 @@ const VehicleMaster = () => {
                         </div>
                     </div>
                     {/* Agency Dropdown */}
-                    <div className="flex items-center gap-3">
+                    {/* <div className="flex items-center gap-3">
                         <AiOutlineUser className="text-sky-500 text-lg" />
                         <div className="w-full">
                             <label className="text-xs text-black opacity-50 font-['Roboto']">Agency</label>
@@ -330,7 +331,8 @@ const VehicleMaster = () => {
                                 ))}
                             </select>
                         </div>
-                    </div>
+                    </div> */}
+                    <SearchableDropDownVehicle agencies={agencies} agencyId={agencyId} setAgencyId={setAgencyId} />
                     {error && (
                         <div className="bg-red-100 text-red-700 px-3 py-2 rounded text-sm">
                             {error}

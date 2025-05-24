@@ -1,6 +1,5 @@
 "use client"
 import React from 'react';
-import { FaHotel, FaUserFriends, FaMoneyBill, FaMapMarkedAlt } from 'react-icons/fa';
 import { App } from '@capacitor/app';
 import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -11,7 +10,7 @@ const features = [
   { title: 'Guest Booking', nav: '/guest-booking' },
   { title: 'Hotel', nav: '/hotel-booking' },
   { title: 'Expenses', nav: '/expenses' },
-  { title: 'Itinerary Builder', nav: '/iteniaryduilder' },
+  { title: 'Itinerary Builder', nav: '/iteniarybuilder' },
   { title: 'Vehicle Master', nav: '/vehicle-master' },
   { title: 'Vehicle Agency Master', nav: '/vehicle-agency-master' },
   { title: 'Category Master', nav: '/category-master' },
@@ -42,19 +41,19 @@ const Home = () => {
     };
   }, [pathname]);
   return (
-    <div className="min-h-screen bg-white p-4">
-      <header className="bg-blue-100 p-4 rounded-lg shadow-md mb-6">
+    <div className="min-h-screen bg-white p-4 flex flex-col items-center">
+      <header className="bg-blue-100 p-4 rounded-lg shadow-md mb-6 w-full">
         <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
       </header>
 
-      <div className="flex justify-left items-center flex-wrap gap-3">
+      <div className="flex justify-left items-center flex-wrap gap-3 w-[357px]">
         {features.map((feature, index) => (
           <div
             onClick={() => router.push(feature.nav)}
             key={index}
             className="flex items-center flex-col bg-white border border-sky-500 rounded-lg shadow-sm hover:shadow-md transition duration-300"
           >
-            <div className='flex items-center justify-center flex-col w-[190px] h-[80px]'>
+            <div className='flex items-center justify-center flex-col w-[170px] h-[80px]'>
 
               <div className="rounded-full"><Image src="/breakfast.svg" alt='' width={40} height={30} /></div>
               <span className="text-gray-700 text-sm font-medium">{feature.title}</span>

@@ -20,9 +20,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gray-100 flex justify-center`}
       >
-        {children}
+        {/* Mobile screen wrapper */}
+        <div className="w-full max-w-[26rem] bg-white min-h-screen overflow-y-auto shadow-lg">
+          {children}
+        </div>
       </body>
     </html>
   );

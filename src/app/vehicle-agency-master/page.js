@@ -16,6 +16,17 @@ const VehicleAgencyMaster = () => {
     const [agencies, setAgencies] = useState([]);
     const [editId, setEditId] = useState(null);
 
+    const [isRotating, setIsRotating] = useState(false);
+
+    const handleClick = () => {
+        setIsRotating(true);
+        router.refresh(); // refresh data
+
+        setTimeout(() => {
+            setIsRotating(false);
+        }, 3000); // stop rotation after 3 seconds
+    };
+
     useEffect(() => {
         const fetchAgencies = async () => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/vehicleAgencyMaster`);
@@ -153,8 +164,10 @@ const VehicleAgencyMaster = () => {
             <header className="bg-blue-100 p-3 sm:p-4 rounded-lg shadow-md mb-4 sm:mb-6 flex justify-between items-center">
                 <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">Vehicle Agency</h1>
                 <div
-                    onClick={() => router.refresh()}
-                    className='flex justify-center items-center w-[40px] h-[40px] rounded-full bg-blue-200 hover:bg-blue-300 transition-all duration-200 cursor-pointer'>
+                    onClick={handleClick}
+                    className={`flex justify-center items-center w-[40px] h-[40px] rounded-full bg-blue-200 hover:bg-blue-300 transition-all duration-200 cursor-pointer ${isRotating ? 'animate-spin' : ''
+                        }`}
+                >
                     <FaSync />
                 </div>
             </header>
