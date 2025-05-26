@@ -21,7 +21,6 @@ const data = [
     inclusions: ["Breakfast", "Dinner", "Sightseeing", "Toll & Taxes"],
     exclusions: ["Lunch", "Personal expenses", "Adventure activities"],
   },
-  // ... other data
 ];
 
 const defaultDay = (i, prevTo = "") => ({
@@ -41,6 +40,7 @@ const defaultDay = (i, prevTo = "") => ({
 });
 
 const ItineraryBuilder = () => {
+  
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -134,17 +134,17 @@ const ItineraryBuilder = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({clientData}),
+        body: JSON.stringify({ clientData }),
       }
     );
-    
+
     console.log(data)
     if (!data.ok) {
       const errorData = await response.json();
       setError(errorData.message || "Failed to submit itinerary.");
       return;
     }
-    else{
+    else {
       setError(null);
       alert("Itinerary submitted successfully!");
       setDetailTab(false);
@@ -157,7 +157,7 @@ const ItineraryBuilder = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100\ p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100\ p-4 pt-8">
       <button
         onClick={() => router.back()}
         className="flex items-center gap-2 text-sky-600 hover:text-sky-800 font-medium mb-4 transition-colors duration-200"
@@ -481,18 +481,14 @@ const ItineraryBuilder = () => {
                   {error}
                 </div>
               )}
-                <button 
-                onClick={()=>handleIternarySubmit()}
+              <button
+                onClick={() => handleIternarySubmit()}
                 className="w-full py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition mt-2">
-                  <AiOutlineUser className="inline mr-1" />
-                  Save
-                </button>
-
-              </div>
-
+                <AiOutlineUser className="inline mr-1" />
+                Save
+              </button>
+            </div>
           )}
-
-
         </div>
       )}
     </div>

@@ -127,7 +127,7 @@ const AddHotel = () => {
     };
 
     return (
-        <div className="w-full max-w-lg md:max-w-2xl mx-auto min-h-screen bg-white p-3 sm:p-6 rounded-none sm:rounded-xl shadow-none sm:shadow-lg transition-all duration-300 mt-8">
+        <div className="w-full max-w-lg md:max-w-2xl mx-auto min-h-screen bg-white p-3 sm:p-6 rounded-none sm:rounded-xl shadow-none sm:shadow-lg transition-all duration-300 pt-8">
             {/* Back Button */}
             <button
                 onClick={() => router.back()}
@@ -138,7 +138,7 @@ const AddHotel = () => {
             </button>
 
             {/* Header */}
-            <header className="bg-blue-100 p-3 sm:p-4 rounded-lg shadow-md mb-4 sm:mb-6 flex justify-between items-center mt-8">
+            <header className="bg-blue-100 p-3 sm:p-4 rounded-lg shadow-md mb-4 sm:mb-6 flex justify-between items-center">
                 <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">Hotel Booking</h1>
                 <div
                     onClick={handleClick}
@@ -323,4 +323,3 @@ const AddHotel = () => {
 };
 
 export default AddHotel;
-export const dynamic = "force-dynamic";

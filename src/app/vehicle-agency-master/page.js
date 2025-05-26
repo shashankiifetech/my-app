@@ -150,7 +150,7 @@ const VehicleAgencyMaster = () => {
     }
 
     return (
-        <div className="w-full max-w-lg md:max-w-2xl mx-auto min-h-screen bg-white p-3 sm:p-6 rounded-none sm:rounded-xl shadow-none sm:shadow-lg transition-all duration-300 mt-5">
+        <div className="w-full max-w-lg md:max-w-2xl mx-auto min-h-screen bg-white p-3 sm:p-6 rounded-none sm:rounded-xl shadow-none sm:shadow-lg transition-all duration-300 pt-8">
             {/* Back Button */}
             <button
                 onClick={() => router.back()}
