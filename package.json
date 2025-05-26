@@ -16,6 +16,7 @@
     "@capacitor/ios": "^7.2.0",
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.5.0",
+    "framer-motion": "^12.13.0",
     "mysql2": "^3.14.1",
     "next": "15.3.2",
     "next-auth": "^4.24.11",

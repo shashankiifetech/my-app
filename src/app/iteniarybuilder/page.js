@@ -54,6 +54,7 @@ const ItineraryBuilder = () => {
   const [isRotating, setIsRotating] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [itenaryId, setItenaryId] = useState(null);
 
   const [itenaryDetails, setItenaryDetails] = useState({
     bookingId: "",
@@ -196,6 +197,7 @@ const ItineraryBuilder = () => {
       } else {
         setError(null);
         alert("Itinerary details submitted successfully!");
+        setItenaryId(data.insertId);
         setIsEdit(false);
 
       }
@@ -216,6 +218,7 @@ const ItineraryBuilder = () => {
       if (data.status === 'ok') {
         const existingData = data.data[0];
         console.log(existingData)
+        setItenaryId(existingData.id);
         //i want to only set capatian name only
         setItenaryDetails((prev) => ({
           ...prev,
@@ -452,6 +455,7 @@ const ItineraryBuilder = () => {
             />
             <button
               onClick={generateItinerary}
+              disabled={itenaryId}
               className="w-[100px] py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
             >
               Generate

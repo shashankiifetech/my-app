@@ -14,6 +14,7 @@ const features = [
   { title: 'Vehicle Master', nav: '/vehicle-master' },
   { title: 'Vehicle Agency Master', nav: '/vehicle-agency-master' },
   { title: 'Category Master', nav: '/category-master' },
+  { title: 'Location Master', nav: '/location-master' },
 ];
 
 const Home = () => {
@@ -41,7 +42,7 @@ const Home = () => {
     };
   }, [pathname]);
   return (
-    <div className="min-h-screen bg-white p-4 flex flex-col items-center pt-8">
+    <div className="min-h-screen bg-white p-4 flex flex-col items-center">
       <header className="bg-blue-100 p-4 rounded-lg shadow-md mb-6 w-full">
         <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
       </header>
@@ -55,7 +56,7 @@ const Home = () => {
           >
             <div className='flex items-center justify-center flex-col w-[170px] h-[80px]'>
 
-              <div className="rounded-full"><Image src="/breakfast.svg" alt='img' width={40} height={30} /></div>
+              <div className="rounded-full"><Image src="/breakfast.svg" alt='' width={40} height={30} /></div>
               <span className="text-gray-700 text-sm font-medium">{feature.title}</span>
             </div>
           </div>

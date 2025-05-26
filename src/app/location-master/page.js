@@ -6,11 +6,11 @@ import { useRouter } from 'next/navigation';
 
 const AddCategory = () => {
     const router = useRouter();
-    const [categoryName, setcategoryName] = useState("");
+    const [locationName, setlocationName] = useState("");
 
     const [openTab, setopenTab] = useState('1')
     const [error, seterror] = useState('')
-    const [categorys, setcategorys] = useState([])
+    const [locations, setlocations] = useState([])
     const [editId, setEditId] = useState(null);
 
     const [isRotating, setIsRotating] = useState(false);
@@ -26,11 +26,11 @@ const AddCategory = () => {
 
     useEffect(() => {
         const fetchCategory = async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/expenseCategoryMaster`)
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/locationMaster`)
             const data = await response.json()
             console.log(data)
             if (data.status === 'ok') {
-                setcategorys(data.data)
+                setlocations(data.data)
             }
             else {
                 alert("Error fetching category.")
@@ -39,7 +39,7 @@ const AddCategory = () => {
         fetchCategory()
     }, []);
 
-    const handleCreateCategory = async () => {
+    const handleCreateLocation = async () => {
         seterror('')
         if (categoryName) {
             if (editId) {
@@ -120,7 +120,7 @@ const AddCategory = () => {
     };
 
     const resetForm = () => {
-        setcategoryName('')
+        setlocationName('')
         setEditId(null);
         setopenTab('1');
         seterror('');
@@ -143,7 +143,7 @@ const AddCategory = () => {
 
             {/* Header */}
             <header className="bg-blue-100 p-3 sm:p-4 rounded-lg shadow-md mb-4 sm:mb-6 flex justify-between items-center">
-                <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">Expenses</h1>
+                <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">Locations</h1>
                 <div
                     onClick={handleClick}
                     className={`flex justify-center items-center w-[40px] h-[40px] rounded-full bg-blue-200 hover:bg-blue-300 transition-all duration-200 cursor-pointer ${isRotating ? 'animate-spin' : ''
@@ -160,7 +160,7 @@ const AddCategory = () => {
                     className={`flex-1 h-9 ${openTab === '1' ? 'bg-sky-500' : ''} border-2 border-sky-500 flex items-center justify-center rounded-md cursor-pointer transition-colors duration-200`}
                 >
                     <span className={`${openTab === '1' ? 'text-white' : 'text-sky-500'} text-sm font-normal font-['Roboto']`}>
-                        All Categorys
+                        All Locations
                     </span>
                 </div>
                 <div
@@ -175,7 +175,7 @@ const AddCategory = () => {
 
             {openTab === '1' ? (
                 <div className="space-y-6">
-                    {categorys.length > 0 ? (
+                    {locations.length > 0 ? (
                         categorys.map((category) => (
                             <div
                                 key={category.id}
@@ -184,7 +184,7 @@ const AddCategory = () => {
                                 <div className="flex-1 flex flex-row flex-wrap">
                                     <div className="flex items-center gap-2">
                                         <AiOutlineUser className="text-sky-600 text-xl" />
-                                        <span className="font-bold text-lg text-gray-800">{category.categoryName}</span>
+                                        <span className="font-bold text-lg text-gray-800">{category.location}</span>
                                     </div>
                                 </div>
                                 <div className="flex flex-row gap-2 sm:flex-col sm:gap-3 items-center sm:ml-auto">
@@ -217,12 +217,12 @@ const AddCategory = () => {
                     <div className="flex items-center gap-3">
                         <AiOutlineUser className="text-sky-500 text-lg" />
                         <div className="w-full">
-                            <label className="text-xs text-black opacity-50 font-['Roboto']">Category Name</label>
+                            <label className="text-xs text-black opacity-50 font-['Roboto']">Location Name</label>
                             <input
                                 type="text"
                                 placeholder="Enter category name"
                                 value={categoryName}
-                                onChange={(e) => setcategoryName(e.target.value)}
+                                onChange={(e) => setlocationName(e.target.value)}
                                 className="w-full text-black text-base sm:text-lg font-normal font-['Roboto'] border-b-2 border-gray-300 focus:outline-none focus:ring-0 bg-transparent transition-all duration-200"
                             />
                         </div>
@@ -235,7 +235,7 @@ const AddCategory = () => {
                     )}
                     <div className="mt-6 flex flex-col sm:flex-row gap-2">
                         <button
-                            onClick={() => handleCreateCategory()}
+                            onClick={() => handleCreateLocation()}
                             className="w-full py-3 bg-gradient-to-br from-sky-500 to-indigo-800 text-white text-lg font-semibold rounded-2xl shadow-lg transition-transform duration-300 hover:scale-105"
                         >
                             {editId ? "Update" : "Submit"}
@@ -256,4 +256,3 @@ const AddCategory = () => {
 };
 
 export default AddCategory;
-export const dynamic = "force-dynamic";
