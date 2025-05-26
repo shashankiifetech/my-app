@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
 
-export default function categoryDropdown({ categories, category, setcategory }) {
+export default function CategoryDropdown({ categories, category, setcategory }) {
     const [query, setQuery] = useState('');
     const [showDropdown, setShowDropdown] = useState(false);
     const dropdownRef = useRef(null);
