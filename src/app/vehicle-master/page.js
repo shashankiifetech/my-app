@@ -5,6 +5,7 @@ import { FiTag } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import { FaSync } from 'react-icons/fa';
 import SearchableDropDownVehicle from '@/components/SearchableDropDownVehicle';
+import { toast } from 'react-toastify';
 
 const VehicleMaster = () => {
     const router = useRouter();
@@ -28,7 +29,8 @@ const VehicleMaster = () => {
                 if (data?.data)
                     setVehicles(data.data);
             } else {
-                alert("Error fetching vehicles");
+                // alert("Error fetching vehicles");
+                toast.error("Error fetching vehicles")
             }
         };
         // Fetch agencies for dropdown
@@ -49,11 +51,13 @@ const VehicleMaster = () => {
     const handleVehicleSubmit = async () => {
         setError('');
         if (!vehicleName || !vehicleNumber || !color || !noOfSeats || !agencyId) {
-            setError("Please fill all the fields");
+            // setError("Please fill all the fields");
+            toast.error("Please fill all the fields");
             return;
         }
         if (isNaN(Number(noOfSeats)) || Number(noOfSeats) <= 0) {
-            setError("No of seats must be a positive number");
+            // setError("No of seats must be a positive number");
+            toast.error("No of seats must be a positive number");
             return;
         }
         if (editId) {
@@ -85,8 +89,10 @@ const VehicleMaster = () => {
                         : vehicle
                 ));
                 resetForm();
+                toast.success("Vehicle updated successfully");
             } else {
-                setError("Error updating vehicle");
+                // setError("Error updating vehicle");
+                toast.error("Error updating vehicle");
             }
         } else {
             // Create
@@ -111,15 +117,18 @@ const VehicleMaster = () => {
                 if (newData.status === 'ok') {
                     setVehicles(prev => [newData.data[0], ...prev]);
                     resetForm();
+                    toast.success("Vehicle added successfully");
                 } else {
-                    setError("Error fetching new vehicle");
+                    // setError("Error fetching new vehicle");
+                    toast.error("Error fetching new vehicle");
                 }
 
             } else {
-                setError("Error adding vehicle");
+                // setError("Error adding vehicle");
+                toast.error("Error adding vehicle");
             }
         }
-        console.log(vehicles)
+        // console.log(vehicles)
     };
 
     const handleDelete = async (id) => {
@@ -130,8 +139,10 @@ const VehicleMaster = () => {
         const data = await response.json();
         if (data.status === 'ok') {
             setVehicles(vehicles.filter(vehicle => vehicle.id !== id));
+            toast.success("Vehicle deleted successfully");
         } else {
-            alert("Error deleting vehicle");
+            // alert("Error deleting vehicle");
+            toast.error("Error deleting vehicle");
         }
     };
 

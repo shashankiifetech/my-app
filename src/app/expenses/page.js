@@ -5,6 +5,7 @@ import { FiTag } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import { FaSync } from 'react-icons/fa';
 import SearchableDropDownCategory from '@/components/SearchableDropDownCategory';
+import { toast } from 'react-toastify';
 
 const ExpensesMaster = () => {
     const router = useRouter();
@@ -40,7 +41,8 @@ const ExpensesMaster = () => {
                 if (data?.data)
                     setExpenses(data.data);
             } else {
-                alert("Error fetching expenses");
+                // alert("Error fetching expenses");
+                toast.error("Error fetching expenses");
             }
         };
         // Fetch categories for dropdown
@@ -59,11 +61,13 @@ const ExpensesMaster = () => {
     const handleExpenseSubmit = async () => {
         setError('');
         if (!amount || !notes || !date || !categoryId) {
-            setError("Please fill all the fields");
+            // setError("Please fill all the fields");
+            toast.error("Please fill all the fields");
             return;
         }
         if (isNaN(Number(amount)) || Number(amount) <= 0) {
-            setError("Amount must be a positive number");
+            // setError("Amount must be a positive number");
+            toast.error("Amount must be a positive number");
             return;
         }
         if (editId) {
@@ -80,6 +84,7 @@ const ExpensesMaster = () => {
             });
             const data = await response.json();
             if (data.status === 'ok') {
+                toast.success("Expense updated successfully");
                 setExpenses(expenses.map(expense =>
                     expense.id === editId
                         ? {
@@ -94,7 +99,8 @@ const ExpensesMaster = () => {
                 ));
                 resetForm();
             } else {
-                setError("Error updating expense");
+                // setError("Error updating expense");
+                toast.error("Error updating expense");
             }
         } else {
             // Create
@@ -116,11 +122,14 @@ const ExpensesMaster = () => {
                 if (newData.status === 'ok') {
                     setExpenses(prev => [newData.data[0], ...prev]);
                     resetForm();
+                    toast.success("Expense added successfully");
                 } else {
-                    setError("Error fetching new expense");
+                    // setError("Error fetching new expense");
+                    toast.error("Error fetching new expense");
                 }
             } else {
-                setError("Error adding expense");
+                // setError("Error adding expense");
+                toast.error("Error adding expense");
             }
         }
     };
@@ -133,8 +142,10 @@ const ExpensesMaster = () => {
         const data = await response.json();
         if (data.status === 'ok') {
             setExpenses(expenses.filter(expense => expense.id !== id));
+            toast.success("Expense deleted successfully");
         } else {
-            alert("Error deleting expense");
+            // alert("Error deleting expense");
+            toast.error("Error deleting expense");
         }
     };
 

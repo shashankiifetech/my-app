@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { AiOutlineUser, AiOutlineDelete, AiOutlineEdit, AiOutlineArrowLeft } from 'react-icons/ai';
 import { FaSync } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
-const AddCategory = () => {
+const Addlocation = () => {
     const router = useRouter();
     const [locationName, setlocationName] = useState("");
 
@@ -25,97 +26,110 @@ const AddCategory = () => {
     };
 
     useEffect(() => {
-        const fetchCategory = async () => {
+        const fetchlocation = async () => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/locationMaster`)
             const data = await response.json()
             console.log(data)
             if (data.status === 'ok') {
+                if(data.data.length > 0)
                 setlocations(data.data)
             }
             else {
-                alert("Error fetching category.")
+                // alert("Error fetching location.")
+                toast.error("Error fetching location.")
+
             }
         }
-        fetchCategory()
+        fetchlocation()
     }, []);
 
     const handleCreateLocation = async () => {
         seterror('')
-        if (categoryName) {
+        if (locationName.trim() !== "") {
             if (editId) {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/expenseCategoryMaster/${editId}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/locationMaster/${editId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        categoryName
+                        locationName
                     }),
                 });
                 const data = await response.json();
                 if (data.status === 'ok') {
-                    setcategorys(categorys.map(category =>
-                        category.id === editId
+                    setlocations(locations.map(location =>
+                        location.id === editId
                             ? {
-                                ...category,
-                                categoryName: categoryName,
+                                ...location,
+                                location : locationName,
                             }
-                            : category
+                            : location
                     ));
                     resetForm();
+                    toast.success("Location updated successfully");
                 } else {
-                    seterror("Error updating category");
+                    // seterror("Error updating location");
+                    toast.error(data.error || "Error updating location");
                 }
             } else {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/expenseCategoryMaster`,
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/locationMaster`,
                     {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            categoryName,
+                            locationName,
                         }),
                     }
                 )
                 const data = await response.json()
                 if (data.status === "ok") {
-                    alert("Category booked successfully")
+                    // alert("location successfully created")
                     console.log(data)
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/expenseCategoryMaster/${data.insertID}`);
-                    const newData = await res.json();
-                    console.log(newData)
-                    if (newData.status === 'ok') {
-                        console.log(newData)
-                        setcategorys(prev => [newData.data, ...categoryName]);
-                        resetForm();
-
-                    } else seterror("Error creating category")
+                    // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/expenselocationMaster/${data.insertID}`);
+                    // const newData = await res.json();
+                    // console.log(newData)
+                    // if (newData.status === 'ok') {
+                    //     console.log(newData)
+                    //     setlocations(prev => [newData.data, ...locationName]);
+                    //     resetForm();
+                    
+                    // } else seterror("Error creating location")
+                    setlocations(prev => [...prev, { id: data.insertId, location: locationName }]);
+                    resetForm();
+                    toast.success("Location successfully created");
                 }
                 else {
-                    seterror("Error creating category")
+                    // seterror(data.error || "Error creating location");
+                    toast.error(data.error || "Error creating location");
                 }
             }
         }
         else {
-            seterror("Please fill all the fields")
+            // seterror("Please fill all the fields")
+            toast.error("Please fill all the fields");
+            return;
         }
     }
 
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this Categroy?")) return;
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/expenseCategoryMaster/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/locationMaster/${id}`, {
             method: 'DELETE'
         });
         const data = await response.json();
         if (data.status === 'ok') {
-            setcategorys(categorys.filter(item => item.id !== id));
+            setlocations(locations.filter(item => item.id !== id));
+            toast.success("Categroy deleted successfully");
         } else {
-            alert("Error deleting Categroy");
+            // alert("Error deleting Categroy");
+            toast.error(data.error || "Error deleting Categroy");
         }
     };
 
-    const handleEdit = (category) => {
-        setcategoryName(category.categoryName)
-        setEditId(category.id);
+    const handleEdit = (location) => {
+        setlocationName(location.location)
+        setEditId(location.id);
         setopenTab('2');
     };
 
@@ -175,21 +189,21 @@ const AddCategory = () => {
 
             {openTab === '1' ? (
                 <div className="space-y-6">
-                    {locations.length > 0 ? (
-                        categorys.map((category) => (
+                    {locations?.length > 0 ? (
+                        locations.map((location) => (
                             <div
-                                key={category.id}
+                                key={location.id}
                                 className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl p-5 shadow-lg flex flex-row sm:flex-row sm:items-center gap-4 sm:gap-8 transition-all duration-200"
                             >
                                 <div className="flex-1 flex flex-row flex-wrap">
                                     <div className="flex items-center gap-2">
                                         <AiOutlineUser className="text-sky-600 text-xl" />
-                                        <span className="font-bold text-lg text-gray-800">{category.location}</span>
+                                        <span className="font-bold text-lg text-gray-800">{location.location}</span>
                                     </div>
                                 </div>
                                 <div className="flex flex-row gap-2 sm:flex-col sm:gap-3 items-center sm:ml-auto">
                                     <button
-                                        onClick={() => handleEdit(category)}
+                                        onClick={() => handleEdit(location)}
                                         className="flex items-center gap-1 bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium px-3 py-1.5 rounded-lg shadow transition"
                                         title="Edit"
                                     >
@@ -197,7 +211,7 @@ const AddCategory = () => {
                                         <span className="hidden sm:inline">Edit</span>
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(category.id)}
+                                        onClick={() => handleDelete(location.id)}
                                         className="flex items-center gap-1 bg-red-100 hover:bg-red-200 text-red-700 font-medium px-3 py-1.5 rounded-lg shadow transition"
                                         title="Delete"
                                     >
@@ -208,7 +222,7 @@ const AddCategory = () => {
                             </div>
                         ))
                     ) : (
-                        <p className="text-center text-gray-500">No category created yet.</p>
+                        <p className="text-center text-gray-500">No location created yet.</p>
                     )}
                 </div>
             ) : (
@@ -220,8 +234,8 @@ const AddCategory = () => {
                             <label className="text-xs text-black opacity-50 font-['Roboto']">Location Name</label>
                             <input
                                 type="text"
-                                placeholder="Enter category name"
-                                value={categoryName}
+                                placeholder="Enter location name"
+                                value={locationName}
                                 onChange={(e) => setlocationName(e.target.value)}
                                 className="w-full text-black text-base sm:text-lg font-normal font-['Roboto'] border-b-2 border-gray-300 focus:outline-none focus:ring-0 bg-transparent transition-all duration-200"
                             />
@@ -255,4 +269,4 @@ const AddCategory = () => {
     );
 };
 
-export default AddCategory;
+export default Addlocation;

@@ -4,6 +4,7 @@ import { AiOutlineUser, AiOutlineMail, AiOutlinePhone, AiOutlineDelete, AiOutlin
 import { FiGlobe } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import { FaSync } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const AddHotel = () => {
     const router = useRouter();
@@ -36,7 +37,8 @@ const AddHotel = () => {
             if (data.status === 'ok') {
                 setHotels(data.hotels);
             } else {
-                alert("Error fetching hotels");
+                // alert("Error fetching hotels");
+                toast.error("Error fetching hotels")
             }
         };
         fetchHotels();
@@ -44,7 +46,8 @@ const AddHotel = () => {
 
     const handleHotelBooking = async () => {
         if (!name || !location || !mobile || !pocMobile || !email) {
-            setError("Please fill all the fields");
+            // setError("Please fill all the fields");
+            toast.error("Please fill all the fields");
             return;
         }
         setError('');
@@ -69,8 +72,10 @@ const AddHotel = () => {
                         : hotel
                 ));
                 resetForm();
+                toast.success("Hotel updated successfully");
             } else {
-                setError("Error updating hotel");
+                // setError("Error updating hotel");
+                toast.error("Error updating hotel");
             }
         } else {
             const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/hotel-booking`, {
@@ -82,8 +87,10 @@ const AddHotel = () => {
             if (data.status === 'ok') {
                 setHotels(prev => [...hotels, data.insertedItem[0]]);
                 resetForm();
+                toast.success("Hotel booked successfully");
             } else {
-                setError("Error booking hotel");
+                // setError("Error booking hotel");
+                toast.error("Error booking hotel");
             }
         }
     };
@@ -96,8 +103,10 @@ const AddHotel = () => {
         const data = await response.json();
         if (data.status === 'ok') {
             setHotels(hotels.filter(hotel => hotel.id !== id));
+            toast.success("Hotel deleted successfully");
         } else {
-            alert("Error deleting hotel");
+            // alert("Error deleting hotel");
+            toast.error("Error deleting hotel");
         }
     };
 

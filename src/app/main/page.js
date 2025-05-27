@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 
 const features = [
-  { title: 'Guest Booking', nav: '/guest-booking' },
+  { title: 'Booking', nav: '/guest-booking' },
   { title: 'Hotel', nav: '/hotel-booking' },
   { title: 'Expenses', nav: '/expenses' },
   { title: 'Itinerary Builder', nav: '/iteniarybuilder' },

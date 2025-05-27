@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { AiOutlineUser, AiOutlineDelete, AiOutlineEdit, AiOutlineArrowLeft } from 'react-icons/ai';
 import { FaSync } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 const AddCategory = () => {
     const router = useRouter();
@@ -33,7 +34,8 @@ const AddCategory = () => {
                 setcategorys(data.data)
             }
             else {
-                alert("Error fetching category.")
+                // alert("Error fetching category.")
+                toast.error("Error fetching category.")
             }
         }
         fetchCategory()
@@ -78,7 +80,8 @@ const AddCategory = () => {
                 )
                 const data = await response.json()
                 if (data.status === "ok") {
-                    alert("Category booked successfully")
+                    // alert("Category booked successfully")
+                    toast.success("Category created successfully");
                     console.log(data)
                     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/expenseCategoryMaster/${data.insertID}`);
                     const newData = await res.json();
@@ -88,15 +91,20 @@ const AddCategory = () => {
                         setcategorys(prev => [newData.data, ...categoryName]);
                         resetForm();
 
-                    } else seterror("Error creating category")
+                    } else {
+                        // seterror("Error creating category")
+                        toast.error("Error creating category");
+                    }
                 }
                 else {
-                    seterror("Error creating category")
+                    // seterror("Error creating category")
+                    toast.error("Error creating category");
                 }
             }
         }
         else {
-            seterror("Please fill all the fields")
+            // seterror("Please fill all the fields")
+            toast.error("Please fill all the fields");
         }
     }
 
@@ -107,9 +115,11 @@ const AddCategory = () => {
         });
         const data = await response.json();
         if (data.status === 'ok') {
+            toast.success("Category deleted successfully");
             setcategorys(categorys.filter(item => item.id !== id));
         } else {
-            alert("Error deleting Categroy");
+            // alert("Error deleting Categroy");
+            toast.error("Error deleting Categroy");
         }
     };
 

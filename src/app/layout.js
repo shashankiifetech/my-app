@@ -1,5 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { AppProvider } from "@/context/AppContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,9 +26,21 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gray-100 flex justify-center`}
       >
         {/* Mobile screen wrapper */}
+        <AppProvider>
         <div className="w-full max-w-[26rem] bg-white min-h-screen overflow-y-auto shadow-lg">
+
           {children}
+          <ToastContainer
+            position="top-center"
+            autoClose={3000}
+            hideProgressBar={true}
+            closeOnClick
+            pauseOnHover={false}
+            draggable={true}
+            theme="light"
+          />
         </div>
+        </AppProvider>
       </body>
     </html>
   );

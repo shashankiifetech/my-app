@@ -4,24 +4,9 @@ import { AiOutlineUser, AiOutlineMail, AiOutlinePhone, AiOutlineDollar, AiOutlin
 import { FaSync } from 'react-icons/fa';
 import { FiGlobe } from 'react-icons/fi'; // For country code dropdown
 import { useRouter } from 'next/navigation'; // For navigation
+import { toast } from 'react-toastify'; // For toast notifications
+import { useAppContext } from '@/context/AppContext';
 
-// const data = [
-//   {
-//     id: 1,
-//     startDate: "2025-06-10",
-//     endDate: "2025-06-15",
-//     startLocation: "Delhi, India",
-//     endLocation: "Manali, Himachal Pradesh",
-//     totalAmountPerPax: 18500,
-//     advanceAmount: 5000,
-//     mapIncluded: true,
-//     numberOfPax: 4,
-//     transportMode: "Private Cab",
-//     accommodationType: "3-star Hotel",
-//     inclusions: ["Breakfast", "Dinner", "Sightseeing", "Toll & Taxes"],
-//     exclusions: ["Lunch", "Personal expenses", "Adventure activities"],
-//   },
-// ];
 
 
 const GuestBooking = () => {
@@ -38,6 +23,8 @@ const GuestBooking = () => {
     const [bookings, setBookings] = useState([]); // State to manage bookings
     const [error, setError] = useState('');
     const [editId, setEditId] = useState(null); // State to manage edit ID
+    const { setBookingId } = useAppContext();
+
 
 
     const [isRotating, setIsRotating] = useState(false);
@@ -61,7 +48,9 @@ const GuestBooking = () => {
                     setBookings(data.data);
 
             }
-            else alert(data.error)
+            // else alert(data.error)
+            else toast.error(data.error)
+
 
         }
 
@@ -83,7 +72,8 @@ const GuestBooking = () => {
     const handleGuestBookingorEdit = async (e) => {
 
         if (!fullName || !email || !mobile || !tour || !amountPerPax || !guests || !advancedBooking) {
-            setError('Please fill all fields');
+            // setError('Please fill all fields');
+            toast.error('Please fill all fields');
             return;
         }
 
@@ -104,7 +94,7 @@ const GuestBooking = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({bookingData}),
+                body: JSON.stringify({ bookingData }),
             });
             const data = await response.json();
             if (data.status === 'ok') {
@@ -124,9 +114,11 @@ const GuestBooking = () => {
                 );
                 setBookings(updatedBookings); // Update bookings state
                 resetForm();
+                toast.success('Booking updated successfully');
             }
             else {
-                setError(data.error);
+                // setError(data.error);
+                toast.error(data.error);
             }
         }
         else {
@@ -147,19 +139,23 @@ const GuestBooking = () => {
                     if (newData.status === 'ok') {
                         setBookings([newData.data[0], ...bookings])
                         resetForm();
+                        toast.success('Booking created successfully');
                     }
-                    else setError(newData.error);
+                    // else setError(newData.error);
+                    else toast.error(newData.error);
                 } else {
-                    setError(data.error);
+                    // setError(data.error);
+                    toast.error(data.error);
                 }
             } catch (error) {
                 console.error('Error creating booking:', error);
-                setError('Failed to create booking');
+                // setError('Failed to create booking');
+                toast.error('Failed to create booking');
             }
         }
     }
 
-    const handleDelete = async(id) => {
+    const handleDelete = async (id) => {
         if (!confirm("Are you sure you want to delete this booking?")) return;
 
         try {
@@ -170,16 +166,19 @@ const GuestBooking = () => {
             const data = await response.json();
             if (data.status === 'ok') {
                 setBookings(bookings.filter(booking => booking.id !== id));
+                toast.success('Booking deleted successfully');
             } else {
-                setError(data.error);
+                // setError(data.error);
+                toast.error(data.error);
             }
         } catch (error) {
             console.error('Error deleting booking:', error);
-            setError('Failed to delete booking');
+            // setError('Failed to delete booking');
+            toast.error('Failed to delete booking');
         }
     }
 
-    const handleEdit = (booking) =>{
+    const handleEdit = (booking) => {
         console.log(booking);
         setFullName(booking.name);
         setEmail(booking.email);
@@ -208,7 +207,7 @@ const GuestBooking = () => {
 
             {/* Header */}
             <header className="bg-blue-100 p-3 sm:p-4 rounded-lg shadow-md mb-4 sm:mb-6 flex justify-between items-center">
-                <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">Hotel Booking</h1>
+                <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">Booking</h1>
                 <div
                     onClick={handleClick}
                     className={`flex justify-center items-center w-[40px] h-[40px] rounded-full bg-blue-200 hover:bg-blue-300 transition-all duration-200 cursor-pointer ${isRotating ? 'animate-spin' : ''
@@ -247,44 +246,36 @@ const GuestBooking = () => {
                 ) : (
                     <div className="space-y-4">
                         {bookings.map((booking, index) => (
-                            // <div key={index} className="p-4 bg-gray-100 rounded-lg shadow-sm">
-                            //     <h2 className="text-lg font-semibold">{booking.fullName}</h2>
-                            //     <p className="text-sm text-gray-600">{booking.email}</p>
-                            //     <p className="text-sm text-gray-600">{booking.mobile}</p>
-                            //     <p className="text-sm text-gray-600">{booking.tour}</p>
-                            //     <p className="text-sm text-gray-600">Amount Per Pax: {booking.amountPerPax} /-</p>
-                            //     <p className="text-sm text-gray-600">Guests: {booking.guests}</p>
-                            //     <p className="text-sm text-gray-600">Advanced Booking: {booking.advancedBooking} /-</p>
-                            // </div>
                             <div
                                 key={booking.id}
                                 className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl p-5 shadow-lg flex flex-row sm:flex-row sm:items-center gap-4 sm:gap-8 transition-all duration-200"
                             >
-                                <div className="flex-1 flex flex-col gap-1">
+                                <div className="flex-1 flex flex-col gap-1 break-normal w-[80%]">
                                     <div className="flex items-center gap-2">
                                         <AiOutlineUser className="text-sky-600 text-xl" />
-                                        <span className="font-bold text-lg text-gray-800">{booking.name}</span>
+                                        <span className="font-bold text-lg text-gray-800 break-normal">{booking.name}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <AiOutlineMail className="text-sky-600 text-xl" />
-                                        <span className="text-gray-700">{booking.email}</span>
+                                        <span className="text-gray-700 break-normal">{booking.email}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <AiOutlinePhone className="text-sky-600 text-xl" />
-                                        <span className="text-gray-700">{booking.mobile}</span>
+                                        <span className="text-gray-700 break-normal">{booking.mobile}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <AiOutlineHome className="text-sky-600 text-xl" />
-                                        <span className="text-gray-700">Tour: {booking.tourName}</span>
+                                        <span className="text-gray-700 break-normal">Tour: {booking.tourName}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-gray-700">Amount Per Pax: {booking.amountPerPax}</span>
+                                        <span className="text-gray-700 break-normal">Amount Per Pax: {booking.amountPerPax}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-gray-700">Guest Count: {booking.guestCount}</span>
+                                        <span className="text-gray-700 break-normal">Guest Count: {booking.guestCount}</span>
                                     </div>
                                 </div>
-                                <div className="flex flex-row gap-2 sm:flex-col sm:gap-3 items-center sm:ml-auto">
+                                <div className="flex flex-col gap-2 sm:flex-col sm:gap-3 items-end  justify-end sm:ml-auto w-[20%]">
+
                                     <button
                                         onClick={() => handleEdit(booking)}
                                         className="flex items-center gap-1 bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium px-3 py-1.5 rounded-lg shadow transition"
@@ -300,6 +291,17 @@ const GuestBooking = () => {
                                     >
                                         <AiOutlineDelete size={20} />
                                         <span className="hidden sm:inline">Delete</span>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setBookingId(booking.id);
+                                            router.push('/iteniarybuilder');
+                                        }}
+                                        className="flex items-center gap-1 bg-green-100 hover:bg-green-200 text-green-700 font-medium px-3 py-1.5 rounded-lg shadow transition"
+                                        title="Refresh"
+                                    >
+                                        <AiOutlineEdit size={20} />
+                                        <span>itenary</span>
                                     </button>
                                 </div>
                             </div>

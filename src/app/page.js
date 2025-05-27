@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
+import { toast } from "react-toastify";
 
 export default function AuthPage() {
     const [isLogin, setIsLogin] = useState(true);
@@ -12,7 +13,7 @@ export default function AuthPage() {
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-    
+
     // const handleSubmit = async (e) => {
     //     e.preventDefault();
     //     setError("");
@@ -60,7 +61,8 @@ export default function AuthPage() {
     // };
 
     const handleGoogleLogin = async () => {
-router.push("/main");   
+        toast.success("Logged in with Google");
+        router.push("/main");
         // setLoading(true);
         // try {
         // const res = await signIn("google", { callbackUrl: "/", redirect: false });
@@ -158,27 +160,27 @@ router.push("/main");
                 </div>
             </div> */}
 
-        <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-            <h1 className="text-2xl font-bold mb-2 text-center text-blue-700">
-                Welcome Back!
-            </h1>
-            <p className="text-gray-500 text-center mb-6">
-                Please login to your account
-            </p>
-            <div className="flex items-center justify-center mb-4">
-                <button
-                    onClick={handleGoogleLogin}
-                    className="bg-white border border-gray-300 rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm hover:shadow-md transition duration-200"
-                >
-                    <Image
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT65WTmiisS-2uqMBJ8C-OwNvh02PWiwMLxxg&s"
-                        alt="Google Icon"
-                        width={20}
-                        height={20}
-                    />
-                    Sign in with Google
-                </button>
-            </div>
+            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+                <h1 className="text-2xl font-bold mb-2 text-center text-blue-700">
+                    Welcome Back!
+                </h1>
+                <p className="text-gray-500 text-center mb-6">
+                    Please login to your account
+                </p>
+                <div className="flex items-center justify-center mb-4">
+                    <button
+                        onClick={handleGoogleLogin}
+                        className="bg-white border border-gray-300 rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm hover:shadow-md transition duration-200"
+                    >
+                        <Image
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT65WTmiisS-2uqMBJ8C-OwNvh02PWiwMLxxg&s"
+                            alt="Google Icon"
+                            width={20}
+                            height={20}
+                        />
+                        Sign in with Google
+                    </button>
+                </div>
             </div>
 
 

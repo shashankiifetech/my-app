@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { AiOutlineUser, AiOutlineMail, AiOutlinePhone, AiOutlineHome, AiOutlineDelete, AiOutlineEdit, AiOutlineArrowLeft } from 'react-icons/ai';
 import { FaSync } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 const VehicleAgencyMaster = () => {
     const router = useRouter();
@@ -36,7 +37,8 @@ const VehicleAgencyMaster = () => {
                 if (data?.data)
                     setAgencies(data.data);
             } else {
-                alert("Error fetching agencies.");
+                // alert("Error fetching agencies.");
+                toast.error("Error fetching agencies.");
             }
         }
         fetchAgencies();
@@ -58,15 +60,18 @@ const VehicleAgencyMaster = () => {
     const handleCreateOrUpdateAgency = async () => {
         setError('');
         if (!name || !email || !mobile || !address) {
-            setError("Please fill all the fields");
+            // setError("Please fill all the fields");
+            toast.error("Please fill all the fields");
             return;
         }
         if (!validateEmail(email)) {
-            setError("Please enter a valid email address");
+            // setError("Please enter a valid email address");
+            toast.error("Please enter a valid email address");
             return;
         }
         if (!validateMobile(mobile)) {
-            setError("Please enter a valid 10-digit mobile number");
+            // setError("Please enter a valid 10-digit mobile number");
+            toast.error("Please enter a valid 10-digit mobile number");
             return;
         }
 
@@ -85,8 +90,10 @@ const VehicleAgencyMaster = () => {
                             : agency
                     ));
                     resetForm();
+                    toast.success("Agency updated successfully");
                 } else {
-                    setError("Error updating agency");
+                    // setError("Error updating agency");
+                    toast.error("Error updating agency");
                 }
             } else {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/vehicleAgencyMaster`, {
@@ -103,13 +110,18 @@ const VehicleAgencyMaster = () => {
                     if (newData.status === 'ok') {
                         setAgencies(prev => [newData.data[0], ...prev]);
                         resetForm();
-                    } else setError("Error creating agency");
+                        toast.success("Agency created successfully");
+                    } 
+                    // else setError("Error creating agency");
+                    else toast.error("Error creating agency");
                 } else {
-                    setError("Error creating agency");
+                    // setError("Error creating agency");
+                    toast.error("Error creating agency");
                 }
             }
         } else {
-            setError("Please fill all the fields");
+            // setError("Please fill all the fields");
+            toast.error("Please fill all the fields");
         }
     }
 
@@ -121,8 +133,10 @@ const VehicleAgencyMaster = () => {
         const data = await response.json();
         if (data.status === 'ok') {
             setAgencies(agencies.filter(item => item.id !== id));
+            toast.success("Agency deleted successfully");
         } else {
-            alert("Error deleting agency");
+            // alert("Error deleting agency");
+            toast.error("Error deleting agency");
         }
     };
 
