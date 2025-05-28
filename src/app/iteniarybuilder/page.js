@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { AiOutlineArrowLeft, AiOutlineUser, AiOutlineHome, AiOutlinePhone, AiOutlineCar, AiOutlineIdcard, AiOutlineTeam, AiOutlineDollarCircle, AiOutlineCreditCard, AiOutlineCompass } from "react-icons/ai";
 import { FaSync, FaHotel, FaMapMarkedAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
@@ -7,27 +8,11 @@ import SearchableSelect from "@/components/SearchableSelect";
 import { toast } from 'react-toastify';
 import { useAppContext } from "@/context/AppContext";
 
-const data = [
-  {
-    id: 1,
-    startDate: "2025-06-10",
-    endDate: "2025-06-15",
-    startLocation: "Delhi, India",
-    endLocation: "Manali, Himachal Pradesh",
-    totalAmountPerPax: 18500,
-    advanceAmount: 5000,
-    mapIncluded: true,
-    numberOfPax: 4,
-    transportMode: "Private Cab",
-    accommodationType: "3-star Hotel",
-    inclusions: ["Breakfast", "Dinner", "Sightseeing", "Toll & Taxes"],
-    exclusions: ["Lunch", "Personal expenses", "Adventure activities"],
-  },
-];
 
-const defaultDay = (i, prevTo = "") => ({
+
+const defaultDay = (i) => ({
   day: i + 1,
-  from: i === 0 ? data[0].startLocation : prevTo,
+  from: "",
   to: "",
   hotelName: "",
   hotel: {},
@@ -55,8 +40,8 @@ const ItineraryBuilder = () => {
   const [isRotating, setIsRotating] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [itenaryId, setItenaryId] = useState(null);
-  const { bookingId, setBookingId } = useAppContext();
+  // const [itenaryId, setItenaryId] = useState(null);
+  const { bookingId, setBookingId, itenaryId, setItenaryId } = useAppContext();
   const [collapsedDays, setCollapsedDays] = useState([]);
   const [itenaryToSave, setItenaryToSave] = useState(null);
 
@@ -164,7 +149,7 @@ const ItineraryBuilder = () => {
     };
 
     fetchBookingDetails();
-    setBookingId('')
+    // setBookingId('')
     setResults([]);
     setShowDropdown(false);
   }, []);
@@ -185,6 +170,7 @@ const ItineraryBuilder = () => {
       }
     }
     setError(null);
+
     const clientData = {
       userId: itenaryId,
       itinerary: itineraryDays,
@@ -311,7 +297,7 @@ const ItineraryBuilder = () => {
             hotelName: day.hotelName || "",
             hotel: day.hotel || {},
             hotelAmount: day.hotelAmount,
-            mapIncluded: day.isMAPInclude === 1 ? true : false,
+            mapIncluded: day.isMAPInclude == 1 ? true : false,
             hotelManagerName: day.managerName || "",
             hotelManagerNumber: day.managerNumber || "",
             vehicleAgencyName: day.vehicleAgencyName || "",
@@ -341,6 +327,8 @@ const ItineraryBuilder = () => {
     });
   }
 
+  // console.log(bookingId,detailTab,itenaryId)
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100\ p-4 pt-8">
 
@@ -366,7 +354,7 @@ const ItineraryBuilder = () => {
         </div>
       </header>
 
-      {!detailTab && !bookingId ? (
+      {!detailTab && !itenaryId && !bookingId ? (
         <div className="relative w-full max-w-md mx-auto">
           <input
             type="text"
@@ -437,14 +425,21 @@ const ItineraryBuilder = () => {
           )}
         </div>
       ) : (
-        <div className="flex flex-col md:flex-row gap-6 mt-4 justify-center items-start">
-
-
-
+        <div className="flex flex-col md:flex-col gap-6 mt-4 justify-center items-start">
           <div className="bg-white rounded-2xl shadow-md p-6 w-full max-w-md space-y-5">
-            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              Itinerary Overview
-            </h2>
+            <div className='flex justify-between items-center'>
+
+              <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                Itinerary Overview
+              </h2>
+              {itenaryId && (<button
+                onClick={() => {
+                  // setBookingId(itenaryId)
+                  router.push('/iteniarybuilder/details')
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >View</button>)}
+            </div>
             <div className="space-y-2 text-gray-700 text-sm">
               <p className="flex items-center gap-2">
                 <AiOutlineCompass className="text-blue-500" />
@@ -584,158 +579,169 @@ const ItineraryBuilder = () => {
                       </span>
                     </h4>
                   </div>
-                  {!collapsedDays[index] && (<div>
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-sm text-gray-500">
-                        <FaMapMarkedAlt className="inline mr-1" />
-                        From:{" "}
-                        <input
-                          type="text"
-                          value={day.from}
-                          onChange={(e) =>
-                            handleDayChange(index, "from", e.target.value)
-                          }
-                          placeholder="Destination"
-                          className="border-b border-gray-300 focus:outline-none ml-1 w-[155px]"
-                        />
-                      </span>
-                      <span className="text-sm text-gray-500">
-                        <FaMapMarkedAlt className="inline mr-1" />
-                        To:{" "}
-                        <input
-                          type="text"
-                          value={day.to}
-                          onChange={(e) =>
-                            handleDayChange(index, "to", e.target.value)
-                          }
-                          placeholder="Destination"
-                          className="border-b border-gray-300 focus:outline-none ml-1 w-[155px]"
-                        />
-                      </span>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-3">
-                        <FaHotel className="text-sky-500 text-lg" />
-                        <div className="w-full">
-                          <label className="text-xs text-black opacity-50 font-['Roboto']">
-                            Hotel Name
-                          </label>
-                          <SearchableSelect
-                            placeholder="Search hotel..."
-                            fetchUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/api/searchHotels`}
-                            onSelect={(hotel) => {
-                              handleDayChange(index, "hotelName", hotel.name)
-                              handleDayChange(index, "hotel", hotel)
+                  <AnimatePresence initial={false}>
+                    {!collapsedDays[index] && (
+                      <motion.div
+                        key="content"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden mt-4 space-y-4 text-sm text-gray-700"
+                      >
+                        <div className="flex justify-between items-center mb-4">
+                          <span className="text-sm text-gray-500">
+                            <FaMapMarkedAlt className="inline mr-1" />
+                            From:{" "}
+                            <input
+                              type="text"
+                              value={day.from}
+                              onChange={(e) =>
+                                handleDayChange(index, "from", e.target.value)
+                              }
+                              placeholder="Destination"
+                              className="border-b border-gray-300 focus:outline-none ml-1 w-[155px]"
+                            />
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            <FaMapMarkedAlt className="inline mr-1" />
+                            To:{" "}
+                            <input
+                              type="text"
+                              value={day.to}
+                              onChange={(e) =>
+                                handleDayChange(index, "to", e.target.value)
+                              }
+                              placeholder="Destination"
+                              className="border-b border-gray-300 focus:outline-none ml-1 w-[155px]"
+                            />
+                          </span>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-3">
+                            <FaHotel className="text-sky-500 text-lg" />
+                            <div className="w-full">
+                              <label className="text-xs text-black opacity-50 font-['Roboto']">
+                                Hotel Name
+                              </label>
+                              <SearchableSelect
+                                placeholder="Search hotel..."
+                                fetchUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/api/searchHotels`}
+                                onSelect={(hotel) => {
+                                  handleDayChange(index, "hotelName", hotel.name)
+                                  handleDayChange(index, "hotel", hotel)
 
-                            }
-                            }
-                          />
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <AiOutlineHome className="text-sky-500 text-lg" />
-                        <div className="w-full">
-                          <label className="text-xs text-black opacity-50 font-['Roboto']">
-                            Hotel Amount
-                          </label>
-                          <input
-                            type="number"
-                            placeholder="Enter hotel amount"
-                            value={day.hotelAmount}
-                            onChange={(e) =>
-                              handleDayChange(index, "hotelAmount", e.target.value)
-                            }
-                            className="w-full border-b-2 border-gray-300 focus:outline-none bg-transparent"
-                          />
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <FaMapMarkedAlt className="text-sky-500 text-lg" />
-                        <div className="w-full flex items-center">
-                          <label className="text-xs text-black opacity-50 font-['Roboto'] mr-2">
-                            MAP Included
-                          </label>
-                          <input
-                            type="checkbox"
-                            checked={day.mapIncluded}
-                            onChange={(e) =>
-                              handleDayChange(index, "mapIncluded", e.target.checked)
-                            }
-                            className="accent-blue-500"
-                          />
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <AiOutlineUser className="text-sky-500 text-lg" />
-                        <div className="w-full">
-                          <label className="text-xs text-black opacity-50 font-['Roboto']">
-                            Hotel Manager Name
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Enter manager name"
-                            value={day.hotelManagerName}
-                            onChange={(e) =>
-                              handleDayChange(index, "hotelManagerName", e.target.value)
-                            }
-                            className="w-full border-b-2 border-gray-300 focus:outline-none bg-transparent"
-                          />
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <AiOutlinePhone className="text-sky-500 text-lg" />
-                        <div className="w-full">
-                          <label className="text-xs text-black opacity-50 font-['Roboto']">
-                            Hotel Manager Number
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Enter manager number"
-                            value={day.hotelManagerNumber}
-                            onChange={(e) =>
-                              handleDayChange(index, "hotelManagerNumber", e.target.value)
-                            }
-                            className="w-full border-b-2 border-gray-300 focus:outline-none bg-transparent"
-                          />
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <AiOutlineCar className="text-sky-500 text-lg" />
-                        <div className="w-full">
-                          <label className="text-xs text-black opacity-50 font-['Roboto']">
-                            Vehicle Agency Name
-                          </label>
-                          <SearchableSelect
-                            placeholder="Search agency..."
-                            fetchUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/api/searchAgencys`}
-                            onSelect={(agency) => {
-                              handleDayChange(index, "vehicleAgencyName", agency.name)
-                              handleDayChange(index, "vehicleAgency", agency)
-                              handleDayChange(index, "vehicleAgencyNumber", agency.mobile)
+                                }
+                                }
+                              />
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <AiOutlineHome className="text-sky-500 text-lg" />
+                            <div className="w-full">
+                              <label className="text-xs text-black opacity-50 font-['Roboto']">
+                                Hotel Amount
+                              </label>
+                              <input
+                                type="number"
+                                placeholder="Enter hotel amount"
+                                value={day.hotelAmount}
+                                onChange={(e) =>
+                                  handleDayChange(index, "hotelAmount", e.target.value)
+                                }
+                                className="w-full border-b-2 border-gray-300 focus:outline-none bg-transparent"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <FaMapMarkedAlt className="text-sky-500 text-lg" />
+                            <div className="w-full flex items-center">
+                              <label className="text-xs text-black opacity-50 font-['Roboto'] mr-2">
+                                MAP Included
+                              </label>
+                              <input
+                                type="checkbox"
+                                checked={day.mapIncluded}
+                                onChange={(e) =>
+                                  handleDayChange(index, "mapIncluded", e.target.checked)
+                                }
+                                className="accent-blue-500"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <AiOutlineUser className="text-sky-500 text-lg" />
+                            <div className="w-full">
+                              <label className="text-xs text-black opacity-50 font-['Roboto']">
+                                Hotel Manager Name
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="Enter manager name"
+                                value={day.hotelManagerName}
+                                onChange={(e) =>
+                                  handleDayChange(index, "hotelManagerName", e.target.value)
+                                }
+                                className="w-full border-b-2 border-gray-300 focus:outline-none bg-transparent"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <AiOutlinePhone className="text-sky-500 text-lg" />
+                            <div className="w-full">
+                              <label className="text-xs text-black opacity-50 font-['Roboto']">
+                                Hotel Manager Number
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="Enter manager number"
+                                value={day.hotelManagerNumber}
+                                onChange={(e) =>
+                                  handleDayChange(index, "hotelManagerNumber", e.target.value)
+                                }
+                                className="w-full border-b-2 border-gray-300 focus:outline-none bg-transparent"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <AiOutlineCar className="text-sky-500 text-lg" />
+                            <div className="w-full">
+                              <label className="text-xs text-black opacity-50 font-['Roboto']">
+                                Vehicle Agency Name
+                              </label>
+                              <SearchableSelect
+                                placeholder="Search agency..."
+                                fetchUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/api/searchAgencys`}
+                                onSelect={(agency) => {
+                                  handleDayChange(index, "vehicleAgencyName", agency.name)
+                                  handleDayChange(index, "vehicleAgency", agency)
+                                  handleDayChange(index, "vehicleAgencyNumber", agency.mobile)
 
-                            }
-                            }
-                          />
+                                }
+                                }
+                              />
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <AiOutlinePhone className="text-sky-500 text-lg" />
+                            <div className="w-full">
+                              <label className="text-xs text-black opacity-50 font-['Roboto']">
+                                Vehicle Agency Number
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="Enter agency number"
+                                value={day.vehicleAgencyNumber}
+                                onChange={(e) =>
+                                  handleDayChange(index, "vehicleAgencyNumber", e.target.value)
+                                }
+                                className="w-full border-b-2 border-gray-300 focus:outline-none bg-transparent"
+                              />
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <AiOutlinePhone className="text-sky-500 text-lg" />
-                        <div className="w-full">
-                          <label className="text-xs text-black opacity-50 font-['Roboto']">
-                            Vehicle Agency Number
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Enter agency number"
-                            value={day.vehicleAgencyNumber}
-                            onChange={(e) =>
-                              handleDayChange(index, "vehicleAgencyNumber", e.target.value)
-                            }
-                            className="w-full border-b-2 border-gray-300 focus:outline-none bg-transparent"
-                          />
-                        </div>
-                      </div>
-                    </div></div>)}
+                      </motion.div>)}
+                  </AnimatePresence>
                 </div>
               ))}
 

@@ -27,19 +27,18 @@ export default function RootLayout({ children }) {
       >
         {/* Mobile screen wrapper */}
         <AppProvider>
-        <div className="w-full max-w-[26rem] bg-white min-h-screen overflow-y-auto shadow-lg">
-
-          {children}
-          <ToastContainer
-            position="top-center"
-            autoClose={3000}
-            hideProgressBar={true}
-            closeOnClick
-            pauseOnHover={false}
-            draggable={true}
-            theme="light"
-          />
-        </div>
+          <div className="w-full max-w-[26rem] max-h-screen bg-white max overflow-y-auto shadow-lg">
+                {children}
+                <ToastContainer
+                  position="top-center"
+                  autoClose={2000}
+                  hideProgressBar={true}
+                  closeOnClick
+                  pauseOnHover={false}
+                  draggable={true}
+                  theme="light"
+                />
+          </div>
         </AppProvider>
       </body>
     </html>

@@ -13,7 +13,7 @@ export default function AuthPage() {
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-
+    console.log("rendering")
     // const handleSubmit = async (e) => {
     //     e.preventDefault();
     //     setError("");

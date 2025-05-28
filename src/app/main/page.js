@@ -4,6 +4,7 @@ import { App } from '@capacitor/app';
 import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useAppContext } from '@/context/AppContext';
 
 
 const features = [
@@ -19,8 +20,8 @@ const features = [
 
 const Home = () => {
   const router = useRouter()
+  const {setBookingId, setItenaryId} = useAppContext();
   
-
   const pathname = usePathname();
   useEffect(() => {
     let listener;
@@ -41,6 +42,13 @@ const Home = () => {
       }
     };
   }, [pathname]);
+
+  useEffect(() => {
+    setBookingId('')
+    setItenaryId('')
+  }, [])
+  
+
   return (
     <div className="min-h-screen bg-white p-4 flex flex-col items-center">
       <header className="bg-blue-100 p-4 rounded-lg shadow-md mb-6 w-full">

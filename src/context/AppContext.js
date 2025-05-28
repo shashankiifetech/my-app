@@ -8,9 +8,11 @@ const AppContext = createContext();
 // 2️⃣ Create Provider
 export const AppProvider = ({ children }) => {
   const [bookingId, setBookingId] = useState('');
+  const [itenaryId, setItenaryId] = useState('')
 
   const value = {
     bookingId,setBookingId,
+    itenaryId, setItenaryId,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
